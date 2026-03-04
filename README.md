@@ -166,3 +166,4 @@ This is especially useful for horizontal scaling or Kubernetes deployments, wher
 Since the container runs as the non-root `www-data` user, traditional cron is not available. Instead, this image provides a built-in scheduler script that supports interval-based and daily scheduled tasks through supervisord.
 
 See the [custom scheduled jobs documentation](docs/custom-cron-tasks.md) for usage examples.
+Test update Wed Mar  4 10:34:31 BST 2026
