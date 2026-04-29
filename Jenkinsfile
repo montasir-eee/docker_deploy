@@ -13,11 +13,11 @@ pipeline {
         stage('Deploy (Local Server)') {
             steps {
                 sh '''
-                set -e
-
                 echo "🚀 Deploying from Jenkins workspace..."
 
-                docker-compose up -d --build
+                ls -la
+
+                docker compose up -d --build || docker-compose up -d --build
                 '''
             }
         }
