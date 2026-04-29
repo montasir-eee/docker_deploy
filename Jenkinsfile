@@ -8,34 +8,25 @@ pipeline {
 
     stages {
 
-        stage('Test') {
-            steps {
-                echo "🧪 Running tests..."
-            }
-        }
-
         stage('Deploy') {
             steps {
-                sh """
+                sh '''
                 set -e
 
                 echo "🚀 Deploying..."
 
-                if [ ! -d "${APP_DIR}/.git" ]; then
-                    git clone ${REPO} ${APP_DIR}
-                fi
+                # clean old workspace (IMPORTANT)
+                rm -rf ${APP_DIR}
+
+                # fresh clone
+                git clone ${REPO} ${APP_DIR}
 
                 cd ${APP_DIR}
-                git pull origin main
-
-                echo "📂 Files in project:"
-                ls -la
 
                 docker version
 
-                # only works if docker-compose.yml exists
-                docker-compose up -d --build
-                """
+                docker compose up -d --build
+                '''
             }
         }
     }
