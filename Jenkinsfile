@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     environment {
-        APP_DIR = "/var/www/docker_deploy"
+        APP_DIR = "${WORKSPACE}/docker_deploy"
         REPO = "https://github.com/montasir-eee/docker_deploy.git"
     }
 
