@@ -18,6 +18,8 @@ pipeline {
         stage('Deploy (Local Server)') {
             steps {
                 sh """
+                set -e
+
                 mkdir -p ${APP_DIR}
 
                 if [ ! -d "${APP_DIR}/.git" ]; then
@@ -29,7 +31,7 @@ pipeline {
 
                 git pull origin main
 
-                docker compose up -d --build
+                docker-compose up -d --build
                 """
             }
         }
