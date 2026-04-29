@@ -1,11 +1,6 @@
 pipeline {
     agent any
 
-    environment {
-        APP_DIR = "${WORKSPACE}/docker_deploy"
-        REPO = "https://github.com/montasir-eee/docker_deploy.git"
-    }
-
     stages {
 
         stage('Test') {
@@ -17,22 +12,13 @@ pipeline {
 
         stage('Deploy (Local Server)') {
             steps {
-                sh """
+                sh '''
                 set -e
 
-                mkdir -p ${APP_DIR}
-
-                if [ ! -d "${APP_DIR}/.git" ]; then
-                    echo "🚀 First time deploy - cloning repo"
-                    git clone ${REPO} ${APP_DIR}
-                fi
-
-                cd ${APP_DIR}
-
-                git pull origin main
+                echo "🚀 Deploying from Jenkins workspace..."
 
                 docker-compose up -d --build
-                """
+                '''
             }
         }
     }
