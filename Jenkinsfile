@@ -11,7 +11,6 @@ pipeline {
         stage('Test') {
             steps {
                 echo "🧪 Running tests..."
-                sh 'echo "No tests yet"'
             }
         }
 
@@ -29,7 +28,12 @@ pipeline {
                 cd ${APP_DIR}
                 git pull origin main
 
+                echo "📂 Files in project:"
+                ls -la
+
                 docker version
+
+                # only works if docker-compose.yml exists
                 docker-compose up -d --build
                 """
             }
