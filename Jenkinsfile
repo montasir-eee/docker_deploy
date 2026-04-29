@@ -6,16 +6,15 @@ pipeline {
         stage('Test') {
             steps {
                 echo "🧪 Running tests..."
-                sh 'echo "No tests yet"'
             }
         }
 
-        stage('Deploy (Local Server)') {
+        stage('Deploy') {
             steps {
                 sh '''
-                echo "🚀 Deploying from Jenkins workspace..."
+                echo "🚀 Deploying..."
 
-                ls -la
+                docker compose version || true
 
                 docker compose up -d --build || docker-compose up -d --build
                 '''
