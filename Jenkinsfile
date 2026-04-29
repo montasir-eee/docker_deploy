@@ -30,9 +30,7 @@ pipeline {
                 git pull origin main
 
                 docker version
-
-                # FINAL FIX
-                docker compose up -d --build
+                docker-compose up -d --build
                 """
             }
         }
