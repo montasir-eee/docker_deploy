@@ -27,13 +27,12 @@ pipeline {
                 fi
 
                 cd ${APP_DIR}
-
                 git pull origin main
 
                 docker version
 
-                # FIX: Works in ALL environments
-                docker-compose up -d --build || /usr/bin/docker compose up -d --build
+                # FINAL FIX
+                docker compose up -d --build
                 """
             }
         }
