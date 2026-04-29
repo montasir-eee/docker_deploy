@@ -1,24 +1,16 @@
-pipeline {
-    agent any
+stage('Deploy') {
+    steps {
+        sh """
+        echo "🚀 Deploying..."
 
-    stages {
+        cd ${WORKSPACE}/docker_deploy
 
-        stage('Test') {
-            steps {
-                echo "🧪 Running tests..."
-            }
-        }
+        git pull origin main
 
-        stage('Deploy') {
-            steps {
-                sh '''
-                echo "🚀 Deploying..."
+        # Use Docker Compose V2 (correct way)
+        docker compose version || true
 
-                docker compose version || true
-
-                docker compose up -d --build || docker-compose up -d --build
-                '''
-            }
-        }
+        docker compose up -d --build
+        """
     }
 }
