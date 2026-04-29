@@ -17,10 +17,15 @@ pipeline {
 
         stage('Deploy') {
             steps {
-                sh """
+                sh '''
+                set -e
+
                 echo "🚀 Deploying..."
 
-                cd ${WORKSPACE}/docker_deploy || git clone ${REPO} ${WORKSPACE}/docker_deploy
+                # Clone if not exists
+                if [ ! -d "${WORKSPACE}/docker_deploy/.git" ]; then
+                    git clone ${REPO} ${WORKSPACE}/docker_deploy
+                fi
 
                 cd ${WORKSPACE}/docker_deploy
 
@@ -28,8 +33,9 @@ pipeline {
 
                 docker version
 
-                docker compose up -d --build
-                """
+                # 🔥 FIX: force correct compose execution
+                /usr/bin/docker compose up -d --build
+                '''
             }
         }
     }
