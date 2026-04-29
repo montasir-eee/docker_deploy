@@ -17,25 +17,24 @@ pipeline {
 
         stage('Deploy') {
             steps {
-                sh '''
+                sh """
                 set -e
 
                 echo "🚀 Deploying..."
 
-                # Clone if not exists
-                if [ ! -d "${WORKSPACE}/docker_deploy/.git" ]; then
-                    git clone ${REPO} ${WORKSPACE}/docker_deploy
+                if [ ! -d "${APP_DIR}/.git" ]; then
+                    git clone ${REPO} ${APP_DIR}
                 fi
 
-                cd ${WORKSPACE}/docker_deploy
+                cd ${APP_DIR}
 
-                git pull origin main || true
+                git pull origin main
 
                 docker version
 
-                # 🔥 FIX: force correct compose execution
-                /usr/bin/docker compose up -d --build
-                '''
+                # FIX: Works in ALL environments
+                docker-compose up -d --build || /usr/bin/docker compose up -d --build
+                """
             }
         }
     }
