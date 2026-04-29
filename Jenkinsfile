@@ -18,26 +18,23 @@ pipeline {
 
         stage('Deploy (Bootstrap + Update)') {
             steps {
-                sshagent(['prod-server-key']) {
+                withCredentials([sshUserPrivateKey(credentialsId: 'prod-server-key', keyFileVariable: 'KEY')]) {
                     sh """
-                    ssh -o StrictHostKeyChecking=no root@${SERVER} '
+                    ssh -i $KEY -o StrictHostKeyChecking=no root@${SERVER} '
                     
-                    # 1. Create folder if not exists
+                    # Create folder if not exists
                     mkdir -p ${APP_DIR}
 
-                    # 2. If first time, clone repo
+                    # First time deploy OR update
                     if [ ! -d "${APP_DIR}/.git" ]; then
                         echo "🚀 First time deploy - cloning repo"
                         git clone ${REPO} ${APP_DIR}
                     fi
 
-                    # 3. Go to project
                     cd ${APP_DIR}
 
-                    # 4. Pull latest code (for updates)
                     git pull origin main
 
-                    # 5. Deploy with Docker
                     docker-compose up -d --build
 
                     '
