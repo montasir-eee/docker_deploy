@@ -1,11 +1,6 @@
 pipeline {
     agent any
 
-    environment {
-        APP_DIR = "${WORKSPACE}/docker_deploy"
-        REPO = "https://github.com/montasir-eee/docker_deploy.git"
-    }
-
     stages {
 
         stage('Deploy') {
@@ -15,13 +10,10 @@ pipeline {
 
                 echo "🚀 Deploying..."
 
-                # clean old workspace (IMPORTANT)
-                rm -rf ${APP_DIR}
+                # use Jenkins checked-out code directly
+                cd $WORKSPACE
 
-                # fresh clone
-                git clone ${REPO} ${APP_DIR}
-
-                cd ${APP_DIR}
+                ls -la
 
                 docker version
 
