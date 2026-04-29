@@ -2,7 +2,6 @@ pipeline {
     agent any
 
     environment {
-        SERVER = "192.168.7.239"
         APP_DIR = "/var/www/docker_deploy"
         REPO = "https://github.com/montasir-eee/docker_deploy.git"
     }
@@ -16,30 +15,22 @@ pipeline {
             }
         }
 
-        stage('Deploy (Bootstrap + Update)') {
+        stage('Deploy (Local Server)') {
             steps {
-                withCredentials([sshUserPrivateKey(credentialsId: 'prod-server-key', keyFileVariable: 'KEY')]) {
-                    sh """
-                    ssh -i $KEY -o StrictHostKeyChecking=no root@${SERVER} '
-                    
-                    # Create folder if not exists
-                    mkdir -p ${APP_DIR}
+                sh """
+                mkdir -p ${APP_DIR}
 
-                    # First time deploy OR update
-                    if [ ! -d "${APP_DIR}/.git" ]; then
-                        echo "🚀 First time deploy - cloning repo"
-                        git clone ${REPO} ${APP_DIR}
-                    fi
+                if [ ! -d "${APP_DIR}/.git" ]; then
+                    echo "🚀 First time deploy - cloning repo"
+                    git clone ${REPO} ${APP_DIR}
+                fi
 
-                    cd ${APP_DIR}
+                cd ${APP_DIR}
 
-                    git pull origin main
+                git pull origin main
 
-                    docker-compose up -d --build
-
-                    '
-                    """
-                }
+                docker-compose up -d --build
+                """
             }
         }
     }
